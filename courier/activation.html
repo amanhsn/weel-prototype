@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weel — You’re live</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cg transform='rotate(-38 13 13)'%3E%3Crect x='5.5' y='8.5' width='15' height='9' rx='4.5' fill='%2301c3a0'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/weel.css">
+<style>
+  .live-head { text-align: center; padding: 48px 20px 8px; }
+  .live-head h1 { font-size: 30px; font-weight: 700; letter-spacing: -.015em; }
+  .live-head p { color: var(--muted-foreground); margin-top: 10px; }
+</style>
+</head>
+<body data-init="activation">
+<main class="wizard-shell wide">
+  <div class="live-head">
+    <div class="hero-check">
+      <svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+    </div>
+    <h1><span id="co-echo">Rapide Livraison Inc.</span> is live on Weel</h1>
+    <p>Cleared to operate · ambient medication tier · Greater Montréal<br>Here’s the pharmacy work already waiting in your region.</p>
+  </div>
+
+  <div class="card tablecard mt-3">
+    <div class="tools">
+      <h3 style="font-size:16px">Open jobs near you</h3>
+      <span class="badge badge-good"><span class="dot"></span>Live</span>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="dt">
+        <thead><tr><th>Job</th><th>Pharmacy</th><th>Route</th><th>Requirements</th><th>Payout</th><th></th></tr></thead>
+        <tbody>
+          <tr>
+            <td class="mono">JOB-4821</td>
+            <td><b>Pharmaprix Centre-Ville</b></td>
+            <td>6 stops · 14 km</td>
+            <td><span class="badge badge-info"><span class="dot"></span>Signature</span></td>
+            <td><b>$54.00</b></td>
+            <td><button class="btn btn-primary btn-sm">Accept</button></td>
+          </tr>
+          <tr>
+            <td class="mono">JOB-4822</td>
+            <td><b>Jean Coutu Verdun</b></td>
+            <td>3 stops · 7 km</td>
+            <td><span class="badge badge-info"><span class="dot"></span>Signature</span></td>
+            <td><b>$27.50</b></td>
+            <td><button class="btn btn-primary btn-sm">Accept</button></td>
+          </tr>
+          <tr>
+            <td class="mono">JOB-4825</td>
+            <td><b>Uniprix Plateau</b></td>
+            <td>4 stops · 11 km</td>
+            <td><span class="badge badge-warn"><span class="dot"></span>Cold chain</span></td>
+            <td><b>$46.00</b></td>
+            <td><button class="btn btn-outline btn-sm" disabled title="Unlock the cold-chain tier to accept">Locked</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="padding:14px 16px;border-top:1px solid var(--border)">
+      <p class="small muted">Cold-chain and controlled-substance jobs unlock as you clear those tiers — <a href="/courier/compliance.html">finish them anytime</a>.</p>
+    </div>
+  </div>
+
+  <p class="center small muted mt-3"><a href="/index.html" data-reset>Reset prototype ↺</a></p>
+</main>
+<script src="/js/flow.js"></script>
+</body>
+</html>

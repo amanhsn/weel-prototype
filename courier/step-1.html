@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weel — Add your courier company</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cg transform='rotate(-38 13 13)'%3E%3Crect x='5.5' y='8.5' width='15' height='9' rx='4.5' fill='%2301c3a0'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/weel.css">
+</head>
+<body data-init="co1">
+<main class="wizard-shell">
+  <div class="stepper">
+    <div class="label"><b>Create your company</b><span>Step 1 of 3</span></div>
+    <div class="bar"><i style="width:33%"></i></div>
+  </div>
+  <div class="wizard-head">
+    <h1>Put your fleet on Weel</h1>
+    <p>Four fields to a live workspace. Insurance and agreements come after — they gate your first job, not your account.</p>
+  </div>
+
+  <form class="card card-pad" novalidate>
+    <div class="field">
+      <label for="co-name">Company name<span class="req">*</span></label>
+      <input class="input" id="co-name" type="text" placeholder="Rapide Livraison Inc.">
+      <span class="error-msg">Enter your company name.</span>
+    </div>
+    <div class="field">
+      <label for="co-city">Where do you operate?<span class="req">*</span></label>
+      <select class="select" id="co-city">
+        <option value="" selected disabled>Select your main region</option>
+        <option>Greater Montréal</option><option>Greater Toronto Area</option><option>Metro Vancouver</option>
+        <option>Ottawa–Gatineau</option><option>Calgary</option><option>Edmonton</option><option>Winnipeg</option><option>Halifax</option>
+      </select>
+      <span class="hint">Doubles as a coverage check — we’ll show pharmacy demand in your region.</span>
+      <span class="error-msg">Select a region.</span>
+    </div>
+    <div class="field">
+      <label for="co-fleet">Fleet size<span class="req">*</span></label>
+      <select class="select" id="co-fleet">
+        <option value="" selected disabled>How many drivers?</option>
+        <option>Just me</option><option>2–5</option><option>6–15</option><option>16–50</option><option>50+</option>
+      </select>
+      <span class="error-msg">Pick a fleet size.</span>
+    </div>
+  </form>
+
+  <div class="wizard-actions">
+    <a class="btn btn-ghost" href="/fork.html">Back</a>
+    <button class="btn btn-primary" id="next">Create workspace</button>
+  </div>
+</main>
+<script src="/js/flow.js"></script>
+</body>
+</html>

@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weel — Your first delivery, simulated</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cg transform='rotate(-38 13 13)'%3E%3Crect x='5.5' y='8.5' width='15' height='9' rx='4.5' fill='%2301c3a0'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/weel.css">
+<style>
+  .quote-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 16px 0; }
+  .qs { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .qs b { font-family: var(--font-display); font-size: 22px; font-weight: 700; display: block; letter-spacing: -.01em; }
+  .qs span { font-size: 12px; color: var(--muted-foreground); }
+  @media (max-width: 560px) { .quote-stats { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body data-init="ph3">
+<main class="wizard-shell wide">
+  <div class="stepper">
+    <div class="label"><b>See it work</b><span>Step 3 of 3</span></div>
+    <div class="bar"><i style="width:100%"></i></div>
+  </div>
+  <div class="wizard-head">
+    <h1>Watch your first delivery — before you commit to anything</h1>
+    <p>This is a simulation on real pricing. No licence, no billing, nothing signed — just what dispatch will feel like.</p>
+  </div>
+
+  <div class="test-banner mb-2"><span class="dot"></span> Test mode — simulated couriers, real quotes. Live dispatch unlocks after licence verification.</div>
+
+  <form class="card card-pad" novalidate>
+    <div class="field">
+      <label for="dest">Where would a typical delivery go?<span class="req">*</span></label>
+      <div class="row" style="align-items:flex-start">
+        <div style="flex:1">
+          <input class="input" id="dest" type="text" placeholder="e.g. 88 Lakeshore Rd W, unit 204" autocomplete="off">
+        </div>
+        <button class="btn btn-primary" id="quote-btn">Get quote</button>
+      </div>
+      <span class="error-msg">Enter any nearby address to price it.</span>
+    </div>
+
+    <div id="quote-zone" hidden>
+      <div class="quote-stats">
+        <div class="qs"><b id="q-price">$9.40</b><span>Delivery cost — you choose who pays</span></div>
+        <div class="qs"><b id="q-km">4.7 km</b><span>Route distance</span></div>
+        <div class="qs"><b id="q-eta">28 min</b><span>Estimated door-to-door</span></div>
+      </div>
+
+      <div class="map-mock" aria-label="Simulated courier en route">
+        <svg viewBox="0 0 600 300">
+          <rect width="600" height="300" fill="#eef2f6"/>
+          <g stroke="#dde5ec" stroke-width="10" stroke-linecap="round">
+            <path d="M0 70 H600"/><path d="M0 150 H600"/><path d="M0 230 H600"/>
+            <path d="M100 0 V300"/><path d="M240 0 V300"/><path d="M380 0 V300"/><path d="M500 0 V300"/>
+          </g>
+          <g stroke="#e7edf3" stroke-width="4"><path d="M0 110 H600"/><path d="M0 190 H600"/><path d="M170 0 V300"/><path d="M310 0 V300"/><path d="M450 0 V300"/></g>
+          <path id="route-path" d="M 60 250 C 140 240, 180 170, 260 160 S 420 120, 520 80" stroke="#c8ece4" stroke-width="3" fill="none" stroke-dasharray="2 8" stroke-linecap="round"/>
+          <path id="route-trail" d="M 60 250 C 140 240, 180 170, 260 160 S 420 120, 520 80" pathLength="100" stroke="#01c3a0" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-dasharray="100" stroke-dashoffset="100"/>
+          <g transform="translate(60,250)">
+            <circle r="13" fill="#01c3a0" opacity=".18"/><circle r="6" fill="#01c3a0"/>
+          </g>
+          <g transform="translate(520,80)">
+            <circle r="13" fill="#0f172a" opacity=".12"/><circle r="6" fill="#0f172a"/>
+          </g>
+          <g id="courier" transform="translate(60,250)">
+            <circle r="12" fill="#01c3a0" opacity=".22">
+              <animate attributeName="r" values="10;14;10" dur="2s" repeatCount="indefinite"/>
+            </circle>
+            <circle r="7.5" fill="#fff"/>
+            <circle r="5" fill="#01c3a0"/>
+          </g>
+        </svg>
+        <div class="map-eta" style="left:auto;right:14px">
+          <div><b>Simulated courier</b><span>Signature + photo proof at the door</span></div>
+          <span class="badge badge-warn" id="sim-badge"><span class="dot"></span>Out for delivery</span>
+        </div>
+      </div>
+
+      <p class="small muted mt-2">In live mode the patient gets an SMS tracking link — no app to download — and you get chain-of-custody records automatically.</p>
+    </div>
+  </form>
+
+  <div class="wizard-actions">
+    <a class="btn btn-ghost" href="/pharmacy/step-2.html">Back</a>
+    <button class="btn btn-primary btn-lg" id="finish">Open my dashboard</button>
+  </div>
+</main>
+<script src="/js/flow.js"></script>
+</body>
+</html>

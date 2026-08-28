@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weel — Log in or create your account</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cg transform='rotate(-38 13 13)'%3E%3Crect x='5.5' y='8.5' width='15' height='9' rx='4.5' fill='%2301c3a0'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/weel.css">
+<style>
+  .email-echo { display: flex; align-items: center; justify-content: space-between; background: var(--muted); border: 1px solid var(--border); border-radius: var(--radius); padding: 9px 12px; font-size: 13.5px; margin-bottom: 16px; }
+  .email-echo b { font-weight: 600; }
+  .legal { font-size: 11.5px; color: var(--muted-foreground); line-height: 1.55; margin-top: 18px; }
+  .demo-hint { font-size: 11.5px; color: var(--color-neutral-400); text-align: center; margin-top: 26px; }
+  .forgot-row { display: flex; justify-content: flex-end; margin: -6px 0 16px; }
+  .forgot-row a { font-size: 13px; font-weight: 500; }
+
+  /* full-panel city map layer */
+  .citymap { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+
+  /* brand-panel journey animation — one 9s loop shared by line, dot, chips */
+  .journey { width: min(440px, 100%); height: auto; }
+  .arrive { transform-origin: 0 0; animation: arrive 9s infinite; opacity: 0; }
+  @keyframes arrive {
+    0%, 71% { opacity: 0; transform: scale(.4); }
+    75%     { opacity: 1; transform: scale(1.25); }
+    82%     { opacity: 0; transform: scale(1.7); }
+    100%    { opacity: 0; transform: scale(.4); }
+  }
+  .chips { position: absolute; left: 50%; bottom: 8%; transform: translateX(-50%); height: 34px; width: 100%; pointer-events: none; }
+  .jchip {
+    position: absolute; left: 50%; transform: translateX(-50%);
+    display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;
+    background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.22);
+    backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+    border-radius: 999px; padding: 7px 14px;
+    font-size: 12.5px; font-weight: 500; color: #fff;
+    opacity: 0; animation: 9s infinite;
+  }
+  .jchip i { width: 6px; height: 6px; border-radius: 50%; background: #fff; }
+  .c1 { animation-name: chip1; }
+  .c2 { animation-name: chip2; }
+  .c3 { animation-name: chip3; }
+  @keyframes chip1 { 0%,6% { opacity:0; transform:translateX(-50%) translateY(6px); } 10%,28% { opacity:1; transform:translateX(-50%) translateY(0); } 33%,100% { opacity:0; transform:translateX(-50%) translateY(-6px); } }
+  @keyframes chip2 { 0%,34% { opacity:0; transform:translateX(-50%) translateY(6px); } 39%,64% { opacity:1; transform:translateX(-50%) translateY(0); } 69%,100% { opacity:0; transform:translateX(-50%) translateY(-6px); } }
+  @keyframes chip3 { 0%,71% { opacity:0; transform:translateX(-50%) translateY(6px); } 76%,94% { opacity:1; transform:translateX(-50%) translateY(0); } 99%,100% { opacity:0; transform:translateX(-50%) translateY(-6px); } }
+  @media (prefers-reduced-motion: reduce) {
+    .c2 { opacity: 1; animation: none; }
+    .c1, .c3, .arrive { animation: none; opacity: 0; }
+  }
+</style>
+</head>
+<body data-init="login">
+
+<main class="auth">
+  <aside class="auth-brand">
+    <!-- full-panel Toronto street map, dissolving toward the edges -->
+    <svg class="citymap" viewBox="0 0 700 960" preserveAspectRatio="xMidYMid slice" fill="none" aria-hidden="true">
+      <defs>
+        <radialGradient id="mapFade" cx="50%" cy="46%" r="58%">
+          <stop offset="0%" stop-color="#fff" stop-opacity="1"/>
+          <stop offset="45%" stop-color="#fff" stop-opacity=".85"/>
+          <stop offset="74%" stop-color="#fff" stop-opacity=".30"/>
+          <stop offset="93%" stop-color="#fff" stop-opacity=".05"/>
+          <stop offset="100%" stop-color="#fff" stop-opacity="0"/>
+        </radialGradient>
+        <filter id="mapErode" x="0" y="0" width="100%" height="100%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.012" numOctaves="3" seed="11" stitchTiles="stitch"/>
+          <feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  .55 .55 .55 0 -.28"/>
+        </filter>
+        <mask id="mapMask" maskUnits="userSpaceOnUse" x="0" y="0" width="700" height="960">
+          <rect width="700" height="960" fill="url(#mapFade)"/>
+          <rect width="700" height="960" filter="url(#mapErode)" opacity=".38"/>
+        </mask>
+      </defs>
+      <g mask="url(#mapMask)" opacity=".26" stroke="#fff">
+        <!-- minor grid -->
+        <g stroke-width="1" stroke-opacity=".5">
+          <path d="M40 0V960M95 0V960M150 0V960M205 0V960M315 0V960M370 0V960M425 0V960M535 0V960M590 0V960M645 0V960"/>
+          <path d="M0 60H700M0 120H700M0 180H700M0 240H700M0 360H700M0 420H700M0 480H700M0 600H700M0 660H700M0 720H700M0 840H700M0 900H700"/>
+          <!-- laneway stubs -->
+          <path d="M122 300v42M340 540v42M508 240v42M228 780v42M562 660v42M75 480v42"/>
+        </g>
+        <!-- arterials -->
+        <g stroke-width="2.2" stroke-opacity=".9">
+          <path d="M260 0V960"/><path d="M480 0V960"/>
+          <path d="M0 300H700"/><path d="M0 540H700"/><path d="M0 780H700"/>
+        </g>
+        <!-- ravine curve + Davenport-style diagonal + Lake Shore curve -->
+        <g stroke-width="1.7" stroke-opacity=".75">
+          <path d="M0 150 C 120 165, 180 90, 300 70 S 520 40, 700 55"/>
+          <path d="M240 960 C 380 800, 520 700, 700 640"/>
+          <path d="M320 960 C 460 880, 590 850, 700 835"/>
+        </g>
+        <!-- parks -->
+        <rect x="350" y="380" width="110" height="70" rx="10" stroke-width="1.4" stroke-opacity=".75"/>
+        <rect x="120" y="620" width="80" height="55" rx="8" stroke-width="1.4" stroke-opacity=".75"/>
+        <!-- street labels -->
+        <g fill="#fff" fill-opacity=".5" stroke="none" font-family="Geist Variable, sans-serif" font-size="13" letter-spacing=".1em">
+          <text x="502" y="290">QUEEN ST W</text>
+          <text x="250" y="215" transform="rotate(-90 250 215)">SPADINA AVE</text>
+          <text x="58" y="530">COLLEGE ST</text>
+        </g>
+      </g>
+    </svg>
+    <div class="top">
+      <h2 data-i18n="brandHead">Better logistics for your business</h2>
+      <div class="row" style="gap:8px; color:#fff" aria-label="Weel">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none" aria-hidden="true"><g transform="rotate(-38 13 13)"><rect x="5.5" y="8.5" width="15" height="9" rx="4.5" fill="currentColor"/><path d="M4 19.5c6 2.6 12 2.4 18-1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".65"/></g></svg>
+        <span style="font-family:var(--font-display);font-weight:700;font-size:23px;letter-spacing:-.02em">weel</span>
+      </div>
+    </div>
+    <div class="art" aria-hidden="true">
+      <svg class="journey" viewBox="0 0 440 300" fill="none">
+        <!-- faint dashed base route -->
+        <path d="M 46 252 C 150 246, 180 158, 252 138 S 372 96, 400 44"
+              stroke="rgba(255,255,255,.28)" stroke-width="2" stroke-dasharray="1 8" stroke-linecap="round"/>
+        <!-- solid progress line, revealed in sync with the courier -->
+        <path d="M 46 252 C 150 246, 180 158, 252 138 S 372 96, 400 44"
+              pathLength="100" stroke="rgba(255,255,255,.9)" stroke-width="2.5" stroke-linecap="round"
+              stroke-dasharray="100" stroke-dashoffset="100">
+          <animate attributeName="stroke-dashoffset" values="100;100;0;0" keyTimes="0;.08;.72;1" dur="9s" repeatCount="indefinite"/>
+        </path>
+        <!-- pharmacy pin (start) -->
+        <g transform="translate(46,252)">
+          <circle r="15" fill="rgba(255,255,255,.16)"/>
+          <circle r="10.5" fill="#fff"/>
+          <g transform="rotate(-40)">
+            <rect x="-5.5" y="-3" width="11" height="6" rx="3" fill="#01a98b"/>
+            <rect x="-5.5" y="-3" width="5.5" height="6" rx="2.75" fill="#67dcc7"/>
+          </g>
+        </g>
+        <!-- home pin (end) -->
+        <g transform="translate(400,44)">
+          <circle r="15" fill="rgba(255,255,255,.16)"/>
+          <circle r="10.5" fill="#fff"/>
+          <path d="M-4.5 3.8V-.6L0-4l4.5 3.4v4.4h-3.2V.9h-2.6v2.9z" fill="#01a98b"/>
+          <!-- arrival pop -->
+          <g class="arrive">
+            <circle r="15" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="2"/>
+          </g>
+        </g>
+        <!-- courier dot riding the route -->
+        <g>
+          <circle r="11" fill="rgba(255,255,255,.22)"/>
+          <circle r="6.5" fill="#fff"/>
+          <circle r="4" fill="#02b493"/>
+          <animateMotion dur="9s" repeatCount="indefinite" rotate="0" calcMode="linear"
+            keyPoints="0;0;1;1" keyTimes="0;.08;.72;1"
+            path="M 46 252 C 150 246, 180 158, 252 138 S 372 96, 400 44"/>
+        </g>
+      </svg>
+      <div class="chips">
+        <span class="jchip c1"><i></i>Picked up at pharmacy</span>
+        <span class="jchip c2"><i></i>Out for delivery</span>
+        <span class="jchip c3"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>Delivered · signature captured</span>
+      </div>
+    </div>
+    <p class="tagline" data-i18n="brandTag">The last mile logistics platform for pharmacies — reshaping them from a point on a map to a prescription fulfillment hub.</p>
+  </aside>
+
+  <section class="auth-panel">
+    <div class="panel-top">
+      <button type="button" class="lang-toggle" aria-label="Switch language">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span class="lbl">Français</span>
+      </button>
+    </div>
+    <div class="panel-mid">
+      <form class="auth-card" novalidate>
+        <h1 id="auth-heading" data-i18n="welcome">Welcome to <span class="brand">Weel</span></h1>
+        <p class="sub" id="auth-sub" data-i18n="sub">One account for every order, route, and delivery — in real time.</p>
+
+        <div class="sso">
+          <button type="button" class="btn btn-outline btn-lg">
+            <svg width="17" height="17" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.3 0-9.7-3.4-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.1-4.1 5.6l6.2 5.2C41.4 35.2 44 30 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
+            <span data-i18n="ssoGoogle">Continue with Google</span>
+          </button>
+          <button type="button" class="btn btn-outline btn-lg">
+            <svg width="16" height="16" viewBox="0 0 21 21" aria-hidden="true"><rect x="0" y="0" width="10" height="10" fill="#F25022"/><rect x="11" y="0" width="10" height="10" fill="#7FBA00"/><rect x="0" y="11" width="10" height="10" fill="#00A4EF"/><rect x="11" y="11" width="10" height="10" fill="#FFB900"/></svg>
+            <span data-i18n="ssoMs">Continue with Microsoft</span>
+          </button>
+        </div>
+
+        <div class="divider-or"><span data-i18n="or">or</span></div>
+
+        <div class="email-echo" id="email-echo-row" hidden>
+          <b id="email-echo"></b>
+          <a href="#" id="edit-email">Edit</a>
+        </div>
+
+        <div id="step-email">
+          <div class="field">
+            <label for="email" data-i18n="emailLabel">Work email</label>
+            <div class="input-wrap lead">
+              <span class="lead-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg></span>
+              <input class="input" id="email" type="email" autocomplete="email" data-i18n-ph="emailPh" placeholder="you@yourpharmacy.ca">
+            </div>
+            <span class="error-msg">Enter a valid work email.</span>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" id="continue" data-i18n="continue">Continue</button>
+        </div>
+
+        <div id="step-pw" hidden>
+          <div class="field">
+            <label for="pw" data-i18n="pwLabel">Password</label>
+            <div class="input-wrap">
+              <input class="input" id="pw" type="password" autocomplete="current-password" data-i18n-ph="pwPh" placeholder="Enter password">
+              <button type="button" class="trail-btn" data-eye="pw" aria-label="Show password"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+          </div>
+          <div class="forgot-row"><a href="/auth/forgot.html" data-i18n="forgot">Forgot your password?</a></div>
+          <button class="btn btn-primary btn-lg btn-block" id="login-btn" data-i18n="login">Log in</button>
+        </div>
+
+        <div id="step-new" hidden>
+          <div class="field">
+            <label for="name" data-i18n="nameLabel">Full name</label>
+            <input class="input" id="name" type="text" autocomplete="name" data-i18n-ph="namePh" placeholder="Alex Tremblay">
+            <span class="error-msg">Enter your name.</span>
+          </div>
+          <div class="field">
+            <label for="new-pw" data-i18n="pwLabel">Password</label>
+            <div class="input-wrap">
+              <input class="input" id="new-pw" type="password" autocomplete="new-password" data-i18n-ph="createPwPh" placeholder="Create a password (8+ characters)">
+              <button type="button" class="trail-btn" data-eye="new-pw" aria-label="Show password"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/></svg></button>
+            </div>
+            <span class="error-msg">At least 8 characters.</span>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" id="create-btn" data-i18n="createAccount">Create account</button>
+          <p class="legal" data-i18n="legal">By continuing you agree to Weel’s Terms of Service and acknowledge the Privacy Policy. Consent to marketing is separate and optional.</p>
+        </div>
+
+        <p class="demo-hint" data-i18n="demoHint">Prototype: any email works. Codes and passwords aren’t checked.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<script src="/js/flow.js"></script>
+</body>
+</html>

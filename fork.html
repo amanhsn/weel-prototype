@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weel — What brings you here?</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cg transform='rotate(-38 13 13)'%3E%3Crect x='5.5' y='8.5' width='15' height='9' rx='4.5' fill='%2301c3a0'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/weel.css">
+<style>
+  .shell { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 24px; }
+  .head { text-align: center; margin-bottom: 34px; }
+  .head h1 { font-size: 30px; font-weight: 700; letter-spacing: -.015em; }
+  .head p { color: var(--muted-foreground); margin-top: 10px; font-size: 15px; }
+  .wrap { width: 100%; max-width: 880px; }
+  .invite-note { text-align: center; margin-top: 26px; font-size: 13.5px; color: var(--muted-foreground); }
+</style>
+</head>
+<body data-init="fork">
+<main class="shell">
+  <div class="wrap">
+    <div class="row" style="justify-content:center;color:var(--primary);margin-bottom:26px" aria-label="Weel">
+      <svg width="24" height="24" viewBox="0 0 26 26" fill="none" aria-hidden="true"><g transform="rotate(-38 13 13)"><rect x="5.5" y="8.5" width="15" height="9" rx="4.5" fill="currentColor"/><path d="M4 19.5c6 2.6 12 2.4 18-1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".65"/></g></svg>
+      <span style="font-family:var(--font-display);font-weight:700;font-size:21px;letter-spacing:-.02em;color:var(--foreground)">weel</span>
+    </div>
+    <div class="head">
+      <h1>What brings you to Weel?</h1>
+      <p>This shapes your workspace. You can add other roles later.</p>
+    </div>
+    <div class="persona-grid">
+      <button type="button" class="persona-card" data-persona="pharmacy">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/></svg></span>
+        <h3>I run a pharmacy</h3>
+        <p>Dispatch prescriptions with your own drivers, a partner courier, or the Weel network — with signature-grade proof of delivery.</p>
+        <span class="go">Set up my pharmacy <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </button>
+      <button type="button" class="persona-card" data-persona="courier">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg></span>
+        <h3>I run a courier company</h3>
+        <p>Bring your fleet onto Weel, invite drivers and dispatchers, and pick up pharmacy delivery work in your city.</p>
+        <span class="go">Add my fleet <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </button>
+      <button type="button" class="persona-card" data-persona="dispatcher">
+        <span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        <h3>I dispatch for a courier</h3>
+        <p>Most dispatchers join from an email invite sent by their courier company — check your inbox first. No invite? Find your company here.</p>
+        <span class="go">Find my company <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg></span>
+      </button>
+    </div>
+    <p class="invite-note">Invited by your team? Open the link in your invite email — it skips all of this. <a href="/dispatcher/join.html">Preview an invite</a></p>
+  </div>
+</main>
+<script src="/js/flow.js"></script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weel — Find your company</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cg transform='rotate(-38 13 13)'%3E%3Crect x='5.5' y='8.5' width='15' height='9' rx='4.5' fill='%2301c3a0'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/weel.css">
+<style>
+  .shell { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; }
+  .ac-wrap { position: relative; }
+  #company-list { position: absolute; top: calc(100% + 4px); left: 0; right: 0; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-md); z-index: var(--z-dropdown); overflow: hidden; }
+  .ac-opt { display: block; width: 100%; text-align: left; background: none; border: none; padding: 11px 14px; font-size: 13.5px; font-family: var(--font-sans); cursor: pointer; color: var(--color-neutral-700); }
+  .ac-opt:hover { background: var(--color-neutral-50); color: var(--foreground); }
+  .ac-none { padding: 11px 14px; font-size: 13.5px; color: var(--muted-foreground); }
+  .pending-ic { width: 64px; height: 64px; border-radius: 16px; background: var(--warning-subtle); color: var(--warning-text); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+</style>
+</head>
+<body data-init="coldstart">
+<main class="shell">
+  <div style="max-width:480px;width:100%">
+    <div class="card card-pad" id="search-zone">
+      <h1 style="font-size:24px;font-weight:700">Find your courier company</h1>
+      <p class="muted small mt-1 mb-3">If your company is already on Weel, request access and an admin approves you. Most dispatchers skip this screen entirely via an email invite.</p>
+      <div class="field ac-wrap">
+        <label for="company-q">Company name</label>
+        <div class="input-wrap lead">
+          <span class="lead-ic"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></span>
+          <input class="input" id="company-q" type="text" placeholder="Start typing… try “Rapide”" autocomplete="off">
+        </div>
+        <div id="company-list" hidden></div>
+      </div>
+      <p class="small muted">Not on Weel yet? <a href="/courier/step-1.html">Create the company workspace</a> instead — takes four fields.</p>
+    </div>
+
+    <div class="card card-pad center" id="requested-zone" hidden>
+      <div class="pending-ic">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <h1 style="font-size:22px;font-weight:700">Request sent to <span id="pick-echo">Rapide Livraison Inc.</span></h1>
+      <p class="muted small mt-2">An admin has to approve you — most requests clear within a few hours. We’ll email you the moment it happens, and your dispatch board will be waiting.</p>
+      <div class="mt-3">
+        <span class="badge badge-warn"><span class="dot"></span>Awaiting admin approval</span>
+      </div>
+      <p class="small muted mt-3">Wrong company? <a href="/dispatcher/cold-start.html">Search again</a></p>
+    </div>
+
+    <p class="center small muted mt-3"><a href="/index.html" data-reset>Reset prototype ↺</a></p>
+  </div>
+</main>
+<script src="/js/flow.js"></script>
+</body>
+</html>

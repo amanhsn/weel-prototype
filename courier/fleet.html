@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weel — Build your fleet</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cg transform='rotate(-38 13 13)'%3E%3Crect x='5.5' y='8.5' width='15' height='9' rx='4.5' fill='%2301c3a0'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/weel.css">
+<style>
+  .empty { text-align: center; padding: 34px 20px; }
+  .empty .ic { width: 52px; height: 52px; border-radius: 14px; background: var(--muted); color: var(--color-neutral-400); display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; }
+</style>
+</head>
+<body data-init="fleet">
+<main class="wizard-shell wide">
+  <div class="stepper">
+    <div class="label"><b>Build your fleet</b><span>Step 2 of 3</span></div>
+    <div class="bar"><i style="width:66%"></i></div>
+  </div>
+  <div class="wizard-head">
+    <h1>Invite your drivers and dispatchers</h1>
+    <p>Drivers get an SMS with a temporary password — no form for them to fill. Dispatchers get an email invite scoped to a team.</p>
+  </div>
+
+  <div class="card card-pad mb-3">
+    <h3 class="mb-2">Add a driver</h3>
+    <div class="grid-2">
+      <div class="field">
+        <label for="d-name">Driver name<span class="req">*</span></label>
+        <input class="input" id="d-name" type="text" placeholder="Marcus Chen">
+        <span class="error-msg">Enter a name.</span>
+      </div>
+      <div class="field">
+        <label for="d-phone">Mobile number<span class="req">*</span></label>
+        <input class="input" id="d-phone" type="tel" placeholder="(514) 555-0182">
+        <span class="error-msg">Enter their mobile.</span>
+      </div>
+    </div>
+    <div class="field">
+      <label for="d-vehicle">Vehicle</label>
+      <select class="select" id="d-vehicle"><option>Car</option><option>Van</option><option>Bike</option><option>Scooter</option></select>
+    </div>
+    <div class="row wrap">
+      <button class="btn btn-primary" id="add-driver">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 9.5a5.5 5.5 0 1 0-8.5 4.6V21l3-1.5L11.5 21v-2"/><path d="M19 8v6M22 11h-6"/></svg>
+        Send SMS invite
+      </button>
+      <button class="btn btn-outline" id="csv-import">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg>
+        Import roster.csv
+      </button>
+      <span class="small muted">Switching from another platform? Bring your whole roster at once.</span>
+    </div>
+  </div>
+
+  <div class="card mb-3 tablecard">
+    <div class="tools">
+      <h3 style="font-size:16px">Your roster · <span id="drv-count">0</span></h3>
+      <span class="badge badge-info"><span class="dot"></span>Invites are free — unlimited drivers</span>
+    </div>
+    <div class="empty" id="empty-roster">
+      <span class="ic"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+      <b>No drivers yet</b>
+      <p class="small muted mt-1">Invite your first driver above — they’ll appear here with their invite status.</p>
+    </div>
+    <div style="overflow-x:auto" id="roster-table" hidden>
+      <table class="dt">
+        <thead><tr><th>Driver</th><th>Mobile</th><th>Vehicle</th><th>Status</th></tr></thead>
+        <tbody id="roster-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card card-pad">
+    <h3 class="mb-2">Invite a dispatcher</h3>
+    <div class="grid-2">
+      <div class="field">
+        <label for="disp-email">Work email<span class="req">*</span></label>
+        <input class="input" id="disp-email" type="email" placeholder="jordan@rapidelivraison.ca">
+        <span class="error-msg">Enter their email.</span>
+      </div>
+      <div class="field">
+        <label for="disp-team">Team scope</label>
+        <select class="select" id="disp-team"><option>All teams</option><option>Downtown team</option><option>North Shore team</option></select>
+      </div>
+    </div>
+    <button class="btn btn-outline" id="invite-dispatcher">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+      Send email invite
+    </button>
+    <p class="small muted mt-2">Dispatchers land directly in your workspace — no signup form, no persona fork.</p>
+  </div>
+
+  <div class="wizard-actions">
+    <a class="btn btn-ghost" href="/courier/step-1.html">Back</a>
+    <a class="btn btn-primary" href="/courier/compliance.html">Continue to compliance</a>
+  </div>
+</main>
+<script src="/js/flow.js"></script>
+</body>
+</html>

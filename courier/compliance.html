@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Weel — Get cleared to operate</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 26'%3E%3Cg transform='rotate(-38 13 13)'%3E%3Crect x='5.5' y='8.5' width='15' height='9' rx='4.5' fill='%2301c3a0'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="stylesheet" href="/css/weel.css">
+<style>
+  .flags { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px; }
+  .tier { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-top: 1px solid var(--border); }
+  .tier:first-child { border-top: none; }
+  .tier .t { flex: 1; }
+  .tier .t b { font-size: 14px; display: block; }
+  .tier .t span { font-size: 12.5px; color: var(--muted-foreground); }
+</style>
+</head>
+<body data-init="compliance">
+<main class="wizard-shell wide">
+  <div class="stepper">
+    <div class="label"><b>Get cleared to operate</b><span>Step 3 of 3</span></div>
+    <div class="bar"><i style="width:100%"></i></div>
+  </div>
+  <div class="wizard-head">
+    <h1>Two flags stand between you and pharmacy work</h1>
+    <p>Your account is already active — this clears you to carry medication. Each item is a one-time e-sign or upload.</p>
+  </div>
+
+  <div class="flags">
+    <span class="badge badge-good" id="flag-account"><span class="dot"></span>Account active</span>
+    <span class="badge badge-warn" id="flag-operate"><span class="dot"></span>Not yet cleared to operate</span>
+  </div>
+
+  <div class="card mb-3">
+    <div class="doc-row" id="coi-row">
+      <span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span>
+      <div class="t"><b>Certificate of insurance</b><span>Commercial auto + cargo + liability. We track expiry and remind you 30 days out.</span></div>
+      <span class="badge badge-warn"><span class="dot"></span>Required</span>
+    </div>
+    <div style="padding:0 18px 18px 70px">
+      <div class="grid-2">
+        <div class="field">
+          <label>Certificate</label>
+          <button type="button" class="btn btn-outline" style="justify-content:flex-start">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v12"/></svg>
+            Upload COI (PDF)
+          </button>
+        </div>
+        <div class="field">
+          <label for="coi-exp">Expiry date<span class="req">*</span></label>
+          <input class="input" id="coi-exp" type="date">
+          <span class="error-msg">We need the expiry to track renewals.</span>
+        </div>
+      </div>
+      <button class="btn btn-primary btn-sm" id="upload-coi">Save certificate</button>
+    </div>
+
+    <div class="doc-row" id="agr-row">
+      <span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M10 13h6M10 17h4"/></svg></span>
+      <div class="t"><b>PHIPA agent agreement</b><span>You act as each pharmacy’s agent for health information. One standard e-sign covers the network.</span></div>
+      <span class="badge badge-warn"><span class="dot"></span>Required</span>
+    </div>
+    <div style="padding:0 18px 18px 70px">
+      <div class="field" style="max-width:340px">
+        <label for="sign-name">Sign by typing your full legal name<span class="req">*</span></label>
+        <input class="input" id="sign-name" type="text" placeholder="Jordan Roy">
+        <span class="error-msg">Type your name to sign.</span>
+      </div>
+      <button class="btn btn-primary btn-sm" id="sign-agreement">Sign agreement</button>
+    </div>
+  </div>
+
+  <div class="card mb-3">
+    <div style="padding:16px 18px 4px"><h3 style="font-size:16px">Capability tiers</h3><p class="small muted">Start with ambient deliveries today. Unlock more job types whenever you’re ready — they never block activation.</p></div>
+    <div class="tier">
+      <div class="t"><b>Ambient medication</b><span>Standard prescription runs with signature + photo proof</span></div>
+      <span class="badge badge-muted" id="tier-ambient"><span class="dot"></span>Locked</span>
+    </div>
+    <div class="tier">
+      <div class="t"><b>Refrigerated / cold chain</b><span>Declare validated insulated equipment (Health Canada GUI-0069)</span></div>
+      <span class="badge badge-muted" id="tier-cold"><span class="dot"></span>Locked</span>
+      <button class="btn btn-outline btn-sm" id="unlock-cold">Declare equipment</button>
+    </div>
+    <div class="tier">
+      <div class="t"><b>Controlled substances</b><span>Chain-of-custody attestation: ID at handoff, no unattended drop, return protocol</span></div>
+      <span class="badge badge-muted" id="tier-narc"><span class="dot"></span>Locked</span>
+      <button class="btn btn-outline btn-sm" id="unlock-narc">Sign attestation</button>
+    </div>
+  </div>
+
+  <div class="wizard-actions">
+    <a class="btn btn-ghost" href="/courier/fleet.html">Back</a>
+    <button class="btn btn-primary btn-lg" id="go-live" disabled>Go live on Weel</button>
+  </div>
+</main>
+<script src="/js/flow.js"></script>
+</body>
+</html>
