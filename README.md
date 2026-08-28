@@ -5,7 +5,7 @@ for three personas (pharmacy, courier company, courier dispatcher). Plain HTML +
 no build step. UI follows **weel-design-system.vercel.app** — tokens, fonts (Satoshi + Geist,
 self-hosted from the DS build), components.
 
-Research + plan: https://claude.ai/code/artifact/5255831a-e2d3-4f56-8677-a94df2a45e04
+
 
 ## Run it
 
