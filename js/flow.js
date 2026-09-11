@@ -202,7 +202,8 @@ const Weel = (() => {
   }
 
   function destFor(p) {
-    return { pharmacy: '/pharmacy/dashboard.html', courier: '/courier/activation.html', dispatcher: '/dispatcher/join.html' }[p] || '/fork.html';
+    if (p === 'courier') return state().courierActivated ? '/courier/dashboard.html' : '/courier/activation.html';
+    return { pharmacy: '/pharmacy/dashboard.html', dispatcher: '/dispatcher/join.html' }[p] || '/fork.html';
   }
 
   /* ---------- verify code interstitial ---------- */
@@ -355,12 +356,91 @@ const Weel = (() => {
     });
   }
 
+  /* ---------- shared dashboard chrome + right rail ---------- */
+  function fillChrome() {
+    const s = state();
+    $('#foot-name') && ($('#foot-name').textContent = s.name || 'Alex Tremblay');
+    $('#foot-email') && ($('#foot-email').textContent = s.email || 'alex@lakeshorerx.ca');
+    const d = $('#today-date');
+    if (d) d.textContent = new Date().toLocaleDateString(lang() === 'fr' ? 'fr-CA' : 'en-CA', { day: 'numeric', month: 'long', year: 'numeric' });
+    // sidebar collapse (DS Sidebar `collapsed` behavior)
+    const sb = $('.sidebar');
+    if (sb) {
+      if (s.sbCollapsed) sb.classList.add('collapsed');
+      $('[data-sb-toggle]')?.addEventListener('click', () => {
+        save({ sbCollapsed: sb.classList.toggle('collapsed') });
+      });
+    }
+  }
+
+  function renderLicenseBadge() {
+    const lb = $('#license-badge');
+    if (!lb) return;
+    const st = state().licenseStatus;
+    if (st === 'approved') { lb.className = 'badge badge-good'; lb.innerHTML = '<span class="dot"></span>Verified'; }
+    else if (st === 'review') { lb.className = 'badge badge-warn'; lb.innerHTML = '<span class="dot"></span>In review'; }
+    else { lb.className = 'badge badge-info'; lb.innerHTML = '<span class="dot"></span>Test mode'; }
+  }
+
+  /* First-run charts: honest empty state until the first delivery/dispatch happens,
+     then the populated sample view takes over (per-role milestone). */
+  function renderViz(hasData, courier) {
+    $$('[data-viz]').forEach(el => { el.hidden = (el.dataset.viz === 'filled') !== hasData; });
+    $$('.viz-badge').forEach(b => {
+      b.className = 'badge viz-badge ' + (hasData ? 'badge-info' : 'badge-muted');
+      b.innerHTML = '<span class="dot"></span>' + (hasData ? 'Sample data' : 'No data yet');
+    });
+    if (courier) {
+      const sl = hasData ? { due: 8, unassigned: 3, overdue: 1 } : { due: 0, unassigned: 0, overdue: 0 };
+      $$('[data-sl]').forEach(el => { el.textContent = sl[el.dataset.sl]; });
+      const needs = hasData
+        ? { unassigned: ['badge-warn', '3 · assign now'], overdue: ['badge-bad', '1 · act now'] }
+        : { unassigned: ['badge-good', '0 · all clear'], overdue: ['badge-good', '0 · all clear'] };
+      $$('[data-needs]').forEach(el => {
+        el.className = 'badge ' + needs[el.dataset.needs][0];
+        el.innerHTML = '<span class="dot"></span>' + needs[el.dataset.needs][1];
+      });
+    }
+  }
+
+  /* Right rail: checklist collapse → progress pill + needs-attention card, plus
+     the dismissible announcement slot. Returns a render fn for progress() to call. */
+  function initRail(role, counts, readyLabel) {
+    const collapsedKey = 'railCollapsed_' + role;
+    const list = $('#checklist-card'), pill = $('#cl-pill'), needs = $('#needs-card');
+    const an = $('#announce-card');
+    if (an) {
+      const id = an.dataset.announceId;
+      an.hidden = (state().announceDismissed || []).includes(id);
+      $('[data-announce-dismiss]', an)?.addEventListener('click', () => {
+        save({ announceDismissed: [...(state().announceDismissed || []), id] });
+        an.hidden = true;
+      });
+      $('[data-announce-cta]', an)?.addEventListener('click', () => toast('Coming in the next prototype round'));
+    }
+    if (!list || !pill) return () => {};
+    function render() {
+      const { n, total } = counts();
+      const complete = n === total;
+      const flag = state()[collapsedKey];
+      const collapsed = flag !== undefined ? flag : complete;
+      if (complete && $('#cl-title')) $('#cl-title').textContent = readyLabel;
+      list.hidden = collapsed;
+      pill.hidden = !collapsed;
+      if (needs) needs.hidden = !collapsed;
+      $('.lbl', pill).textContent = complete ? 'Setup complete ✓' : `Setup · ${n} of ${total} ✓`;
+    }
+    $('#cl-hide')?.addEventListener('click', () => { save({ [collapsedKey]: true }); render(); });
+    pill.addEventListener('click', () => { save({ [collapsedKey]: false }); render(); });
+    render();
+    return render;
+  }
+
   /* ---------- pharmacy dashboard + checklist ---------- */
   function initPharmacyDashboard() {
     const s = state();
     $('#who') && ($('#who').textContent = (s.pharmacy && s.pharmacy.name) || 'Lakeshore Pharmacy');
-    $('#foot-name') && ($('#foot-name').textContent = s.name || 'Alex Tremblay');
-    $('#foot-email') && ($('#foot-email').textContent = s.email || 'alex@lakeshorerx.ca');
+    fillChrome();
 
     const done = new Set(s.checklist || []);
     if (s.licenseStatus === 'approved') done.add('license');
@@ -375,13 +455,19 @@ const Weel = (() => {
         done.add(k);
         save({ checklist: [...done] });
         progress();
+        if (k === 'delivery') renderViz(true, false);
       });
     });
+    renderViz(done.has('delivery'), false);
+    const renderRail = initRail('pharmacy',
+      () => ({ n: $$('.check-item.done').length, total: $$('.check-item').length }),
+      'You’re delivery-ready 🎉');
     function progress() {
       const total = $$('.check-item').length;
       const n = $$('.check-item.done').length;
       $('#cl-progress').style.width = (n / total * 100) + '%';
       $('#cl-count').textContent = `${n} of ${total} complete`;
+      renderRail();
     }
     progress();
 
@@ -389,13 +475,177 @@ const Weel = (() => {
       save({ congratsShown: true });
       toast('Licence verified — live dispatch unlocked 🎉');
     }
-    const lb = $('#license-badge');
-    if (lb) {
-      const st = s.licenseStatus;
-      if (st === 'approved') { lb.className = 'badge badge-good'; lb.innerHTML = '<span class="dot"></span>Verified'; }
-      else if (st === 'review') { lb.className = 'badge badge-warn'; lb.innerHTML = '<span class="dot"></span>In review'; }
-      else { lb.className = 'badge badge-info'; lb.innerHTML = '<span class="dot"></span>Test mode'; }
+    renderLicenseBadge();
+    $('[data-tour="create-delivery"]')?.addEventListener('click', () => toast('The create-delivery flow ships in the next prototype round'));
+  }
+
+  /* ---------- pharmacy deliveries (guided empty state) ---------- */
+  function initPharmacyDeliveries() {
+    const s = state();
+    $('#who') && ($('#who').textContent = (s.pharmacy && s.pharmacy.name) || 'Lakeshore Pharmacy');
+    fillChrome();
+    renderLicenseBadge();
+    $('#create-first')?.addEventListener('click', () => toast('The create-delivery flow ships in the next prototype round'));
+    $('[data-create]')?.addEventListener('click', () => toast('The create-delivery flow ships in the next prototype round'));
+    $('#add-patient')?.addEventListener('click', (e) => { e.preventDefault(); toast('Patients ship in the next prototype round'); });
+    $$('[data-phil]').forEach(b => b.addEventListener('click', () => toast('Phil is a preview in this prototype')));
+  }
+
+  /* ---------- deliveries board: order detail drawer (sample data) ---------- */
+  const BOARD_ORDERS = {
+    'WEL-2101': {
+      status: ['badge-warn', 'Out for delivery'], driver: 'M. Chen',
+      pharmacy: 'Pharmaprix Centre-Ville', pickup: '1500 Rue Sainte-Catherine O, Montréal',
+      drop: 'M. Gagnon', dropAddr: '2210 Rue Rachel E, Montréal', window: '2–4 pm', payout: '$27.50',
+      req: ['badge-info', 'Signature'], items: [['Rx package', 1], ['Patient info sheet', 1]],
+      timeline: [['Created', '9:14 am', 'done'], ['Routed', '9:32 am', 'done'], ['Out for delivery', '1:05 pm', 'done'], ['Delivered', '', 'pending']]
+    },
+    'WEL-2102': {
+      status: ['badge-brand', 'Routed'], driver: 'P. Sharma',
+      pharmacy: 'Jean Coutu Verdun', pickup: '4545 Rue Wellington, Verdun',
+      drop: 'R. Tremblay', dropAddr: '3620 Rue de Verdun', window: '4–6 pm', payout: '$19.00',
+      req: ['badge-info', 'Signature'], items: [['Rx package', 1]],
+      timeline: [['Created', '10:02 am', 'done'], ['Routed', '10:20 am', 'done'], ['Out for delivery', '', 'pending'], ['Delivered', '', 'pending']]
+    },
+    'WEL-2103': {
+      status: ['badge-info', 'Created'], driver: null,
+      pharmacy: 'Uniprix Plateau', pickup: '957 Av. du Mont-Royal E, Montréal',
+      drop: 'A. Bouchard', dropAddr: '5122 Rue Saint-Denis', window: '4–6 pm', payout: '$46.00',
+      req: ['badge-warn', 'Cold chain'], items: [['Refrigerated Rx package', 1], ['Cold pack', 2]],
+      timeline: [['Created', '11:40 am', 'done'], ['Routed', '', 'pending'], ['Out for delivery', '', 'pending'], ['Delivered', '', 'pending']]
+    },
+    'WEL-2104': {
+      status: ['badge-good', 'Delivered'], driver: 'J.-L. Fortin',
+      pharmacy: 'Pharmaprix Centre-Ville', pickup: '1500 Rue Sainte-Catherine O, Montréal',
+      drop: 'H. Nguyen', dropAddr: '1188 Rue Saint-Antoine O', window: '12–2 pm', payout: '$23.00',
+      req: ['badge-info', 'Signature'], items: [['Rx package', 1]],
+      timeline: [['Created', '8:05 am', 'done'], ['Routed', '8:18 am', 'done'], ['Out for delivery', '11:12 am', 'done'], ['Delivered · signed', '1:36 pm', 'done']]
     }
+  };
+
+  const PIN_STORE = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 10h.01"/></svg>';
+  const PIN_DROP = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>';
+
+  function closeOrderDrawer() { $$('[data-drawer]').forEach(el => el.remove()); }
+
+  function openOrderDrawer(id) {
+    const o = BOARD_ORDERS[id];
+    if (!o) return;
+    closeOrderDrawer();
+    const scrim = document.createElement('div');
+    scrim.className = 'drawer-scrim';
+    scrim.dataset.drawer = '1';
+    const d = document.createElement('aside');
+    d.className = 'drawer';
+    d.dataset.drawer = '1';
+    d.setAttribute('role', 'dialog');
+    d.setAttribute('aria-modal', 'true');
+    d.tabIndex = -1;
+    d.innerHTML = `
+      <div class="d-head">
+        <span class="id">${id}</span>
+        <span class="badge ${o.status[0]}"><span class="dot"></span>${o.status[1]}</span>
+        <button class="btn btn-ghost btn-sm x" data-close aria-label="Close"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="d-body">
+        <div class="d-sec">
+          <div class="sec-t">Route</div>
+          <div class="d-stop"><span class="pin">${PIN_STORE}</span><div><b>${o.pharmacy}</b><span>${o.pickup}</span></div></div>
+          <div class="d-stop"><span class="pin">${PIN_DROP}</span><div><b>${o.drop}</b><span>${o.dropAddr}</span></div></div>
+        </div>
+        <div class="d-sec">
+          <div class="sec-t">Details</div>
+          <div class="d-grid">
+            <div><span class="k">Arrival</span><span class="v">${o.window}</span></div>
+            <div><span class="k">Amount</span><span class="v">${o.payout}</span></div>
+            <div><span class="k">Driver</span><span class="v">${o.driver || 'Not yet assigned'}</span></div>
+            <div><span class="k">Requirements</span><span class="badge ${o.req[0]}">${o.req[1]}</span></div>
+          </div>
+        </div>
+        <div class="d-sec">
+          <div class="sec-t">Items</div>
+          ${o.items.map(([n, q]) => `<div class="d-item"><b>${n}</b><span>× ${q}</span></div>`).join('')}
+        </div>
+        <div class="d-sec">
+          <div class="sec-t">Timeline</div>
+          <div class="tl">${o.timeline.map(([t, w, st]) => `<div class="tl-item ${st}"><b>${t}</b><span class="when">${w}</span></div>`).join('')}</div>
+        </div>
+        <p class="small muted">Sample data — real deliveries carry live tracking and proof of delivery here.</p>
+      </div>`;
+    document.body.append(scrim, d);
+    d.focus();
+    scrim.addEventListener('click', closeOrderDrawer);
+    $('[data-close]', d).addEventListener('click', closeOrderDrawer);
+  }
+
+  /* ---------- courier admin dashboard + checklist ---------- */
+  function initCourierDashboard() {
+    const s = state();
+    $('#who') && ($('#who').textContent = (s.courier && s.courier.name) || 'Rapide Livraison Inc.');
+    fillChrome();
+
+    // clearance badge — same rule as compliance.html
+    const c = s.compliance || {};
+    const cleared = !!(c.coi && c.agreement);
+    const cb = $('#clearance-badge');
+    if (cb) {
+      cb.className = 'badge ' + (cleared ? 'badge-good' : 'badge-warn');
+      cb.innerHTML = '<span class="dot"></span>' + (cleared ? 'Cleared to operate' : 'Not yet cleared');
+    }
+
+    // drivers KPI from the real roster
+    const roster = s.roster || [];
+    $('#kpi-drivers') && ($('#kpi-drivers').textContent = roster.length);
+
+    // checklist: auto-complete from what the courier already did elsewhere
+    const done = new Set(s.courierChecklist || []);
+    if (cleared) done.add('company');
+    if (roster.length) done.add('drivers');
+    if (s.dispatcherInvited) done.add('dispatcher');
+    save({ courierChecklist: [...done] });
+    if (cleared && !s.coCongratsShown) {
+      save({ coCongratsShown: true });
+      toast('Company verified — live dispatch unlocked 🎉');
+    }
+
+    $$('.check-item').forEach(item => {
+      const k = item.dataset.check;
+      if (done.has(k)) item.classList.add('done');
+      const btn = $('.btn', item);
+      if (btn && !done.has(k)) btn.addEventListener('click', () => {
+        if (k === 'company') { location.href = '/courier/compliance.html'; return; }
+        if (k === 'drivers' || k === 'dispatcher') { location.href = '/courier/fleet.html'; return; }
+        if (k === 'region') toast('Region confirmed — deliveries outside it stay hidden');
+        if (k === 'dispatch') toast('Nice — that’s the whole loop: delivery in, driver out.');
+        item.classList.add('done');
+        done.add(k);
+        save({ courierChecklist: [...done] });
+        progress();
+        if (k === 'dispatch') renderViz(true, true);
+      });
+    });
+    renderViz(done.has('dispatch'), true);
+    const renderRail = initRail('courier',
+      () => ({ n: $$('.check-item.done').length, total: $$('.check-item').length }),
+      'You’re dispatch-ready 🎉');
+    function progress() {
+      const total = $$('.check-item').length;
+      const n = $$('.check-item.done').length;
+      $('#cl-progress').style.width = (n / total * 100) + '%';
+      $('#cl-count').textContent = `${n} of ${total} complete`;
+      renderRail();
+    }
+    progress();
+
+    $('#new-dispatch')?.addEventListener('click', () => toast('Dispatch creation ships in the next prototype round'));
+    $$('[data-assign]').forEach(b => b.addEventListener('click', () => toast('Sample data — real deliveries become assignable here')));
+
+    // deliveries board: row click → order detail drawer (buttons inside rows don't trigger it)
+    $$('tr[data-order]').forEach(tr => tr.addEventListener('click', (e) => {
+      if (e.target.closest('.btn')) return;
+      openOrderDrawer(tr.dataset.order);
+    }));
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOrderDrawer(); });
   }
 
   /* ---------- verification tracker ---------- */
@@ -557,6 +807,10 @@ const Weel = (() => {
   function initActivation() {
     const s = state();
     $('#co-echo') && ($('#co-echo').textContent = (s.courier && s.courier.name) || 'Rapide Livraison Inc.');
+    $('#open-dash')?.addEventListener('click', () => {
+      save({ courierActivated: true });
+      location.href = '/courier/dashboard.html';
+    });
   }
 
   /* ---------- dispatcher ---------- */
@@ -604,7 +858,10 @@ const Weel = (() => {
   /* ---------- shared: reset ---------- */
   function initReset() {
     $$('[data-reset]').forEach(b => b.addEventListener('click', () => {
-      localStorage.removeItem(KEY);
+      // sweep every prototype key (state, tour, welcome flags) but keep the language
+      Object.keys(localStorage)
+        .filter(k => k.startsWith('weel-') && k !== 'weel-lang')
+        .forEach(k => localStorage.removeItem(k));
       location.href = '/index.html';
     }));
   }
@@ -615,8 +872,9 @@ const Weel = (() => {
     const map = {
       login: initLogin, verify: initVerify, forgot: initForgot, fork: initFork,
       ph1: initPharmacyStep1, ph2: initPharmacyStep2, ph3: initPharmacyStep3,
-      phdash: initPharmacyDashboard, phverify: initVerification,
+      phdash: initPharmacyDashboard, phverify: initVerification, phdeliv: initPharmacyDeliveries,
       co1: initCourierStep1, fleet: initFleet, compliance: initCompliance, activation: initActivation,
+      codash: initCourierDashboard,
       join: initJoin, coldstart: initColdStart
     };
     if (init && map[init]) map[init]();
