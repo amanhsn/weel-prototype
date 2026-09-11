@@ -18,31 +18,36 @@
 <body data-init="phdash">
 <div class="app">
   <aside class="sidebar">
-    <div class="logo" style="color:var(--primary)">
-      <svg width="22" height="22" viewBox="0 0 26 26" fill="none" aria-hidden="true"><g transform="rotate(-38 13 13)"><rect x="5.5" y="8.5" width="15" height="9" rx="4.5" fill="currentColor"/><path d="M4 19.5c6 2.6 12 2.4 18-1.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" opacity=".65"/></g></svg>
-      <span style="font-family:var(--font-display);font-weight:700;font-size:19px;letter-spacing:-.02em;color:var(--foreground)">weel</span>
+    <div class="s-head">
+      <button class="sb-toggle" data-sb-toggle aria-label="Toggle sidebar"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M9 3v18"/></svg></button>
+      <a class="s-logo" href="/pharmacy/dashboard.html" aria-label="Weel home"><img src="/assets/img/weel-logo.png" alt="Weel"></a>
     </div>
-    <nav>
-      <a class="active" href="/pharmacy/dashboard.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>Dashboard</a>
-      <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.29 7 12 12l8.71-5"/><path d="M12 22V12"/></svg>Deliveries</a>
-      <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Patients</a>
-      <a href="/pharmacy/verification.html"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>Compliance</a>
-      <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Team</a>
-      <a href="#"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>Billing</a>
+    <div class="s-create">
+      <button class="btn btn-primary btn-block" data-tour="create-delivery" title="Create delivery"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg><span class="lbl">Create delivery</span></button>
+    </div>
+    <nav data-tour="nav">
+      <a href="/pharmacy/deliveries.html" title="Deliveries"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 9.4 7.55 4.24"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.29 7 12 12l8.71-5"/><path d="M12 22V12"/></svg><span class="nav-lbl">Deliveries</span></a>
+      <a href="#" title="Patients"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nav-lbl">Patients</span></a>
+      <a href="#" title="Calendar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg><span class="nav-lbl">Calendar</span></a>
+      <a href="/pharmacy/verification.html" title="Compliance"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg><span class="nav-lbl">Compliance</span></a>
+      <a href="#" title="Team"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg><span class="nav-lbl">Team</span></a>
+      <a href="#" title="Manage Organization"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg><span class="nav-lbl">Manage Organization</span></a>
     </nav>
-    <div class="foot">
+    <div class="foot" role="button" tabindex="0">
       <span class="avatar">A</span>
       <div style="min-width:0"><b id="foot-name">Alex Tremblay</b><span id="foot-email">alex@lakeshorerx.ca</span></div>
+      <svg class="chev" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 15 5 5 5-5M7 9l5-5 5 5"/></svg>
     </div>
   </aside>
 
   <div>
     <header class="topbar">
-      <div class="hello"><b>👋 Hello, <span id="who">Lakeshore Pharmacy</span></b><span>13 August, 2026</span></div>
+      <div class="hello"><span class="wave">👋</span><div style="min-width:0"><b>Hello, <span id="who">Lakeshore Pharmacy</span></b><span id="today-date">13 August, 2026</span></div></div>
       <div class="actions">
         <span id="license-badge" class="badge badge-info"><span class="dot"></span>Test mode</span>
-        <button class="btn btn-primary btn-pill btn-sm"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>View Map</button>
-        <button class="btn btn-outline btn-pill btn-sm">✨ Ask Phil</button>
+        <button class="btn btn-primary btn-md"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/></svg>View Map</button>
+        <button class="btn btn-outline btn-md btn-pill" data-tour="ask-phil" data-phil>✨ Ask Phil</button>
+        <button class="btn btn-ghost btn-md btn-pill" id="help-btn" aria-haspopup="true" aria-expanded="false" aria-label="Help"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><path d="M12 17h.01"/></svg></button>
         <span class="avatar">A</span>
       </div>
     </header>
@@ -54,18 +59,118 @@
           <h1>Dashboard</h1>
           <p class="sub">Everything here is live except dispatch — that unlocks when your licence clears.</p>
         </div>
-        <button class="btn btn-primary"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5v14"/></svg>Create delivery</button>
       </div>
 
-      <div class="statgrid">
-        <div class="stat"><div class="lbl">Scheduled deliveries <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg></div><div class="num">1</div><div class="sub">Your simulated run</div></div>
-        <div class="stat"><div class="lbl">Completed <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div><div class="num">0</div><div class="sub">Today</div></div>
-        <div class="stat"><div class="lbl">Avg. cost / delivery <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" x2="12" y1="2" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div><div class="num">$8.72</div><div class="sub">Estimated for your zone</div></div>
-        <div class="stat"><div class="lbl">Team members <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><div class="num">1</div><div class="sub">Just you so far</div></div>
+      <div class="statline">
+        <div class="sl"><b>1</b><span>Scheduled today</span></div>
+        <div class="sl"><b>0</b><span>Completed today</span></div>
+        <div class="sl"><b>$8.72</b><span>Avg cost / delivery</span></div>
+        <div class="sl"><b>1</b><span>Team member</span></div>
+      </div>
+
+      <div class="stats-grid" data-tour="stats">
+        <div class="card">
+          <div class="chart-head">
+            <h3>Deliveries · last 7 days</h3>
+            <span class="badge badge-muted viz-badge"><span class="dot"></span>No data yet</span>
+          </div>
+          <div class="viz-empty" data-viz="empty">
+            <div class="bars" aria-hidden="true">
+              <div class="b"><span class="v">0</span><i style="height:37%"></i><span class="d">Mon</span></div>
+              <div class="b"><span class="v">0</span><i style="height:48%"></i><span class="d">Tue</span></div>
+              <div class="b"><span class="v">0</span><i style="height:43%"></i><span class="d">Wed</span></div>
+              <div class="b"><span class="v">0</span><i style="height:54%"></i><span class="d">Thu</span></div>
+              <div class="b"><span class="v">0</span><i style="height:65%"></i><span class="d">Fri</span></div>
+              <div class="b"><span class="v">0</span><i style="height:29%"></i><span class="d">Sat</span></div>
+              <div class="b"><span class="v">0</span><i style="height:12%"></i><span class="d">Sun</span></div>
+            </div>
+            <div class="viz-overlay"><b>Your first week fills this in</b><span>Live counts appear here as you deliver.</span></div>
+          </div>
+          <div data-viz="filled" hidden>
+            <div class="bars">
+              <div class="b" title="Monday — 24 deliveries"><span class="v">24</span><i style="height:37%"></i><span class="d">Mon</span></div>
+              <div class="b" title="Tuesday — 31 deliveries"><span class="v">31</span><i style="height:48%"></i><span class="d">Tue</span></div>
+              <div class="b" title="Wednesday — 28 deliveries"><span class="v">28</span><i style="height:43%"></i><span class="d">Wed</span></div>
+              <div class="b" title="Thursday — 35 deliveries"><span class="v">35</span><i style="height:54%"></i><span class="d">Thu</span></div>
+              <div class="b" title="Friday — 42 deliveries"><span class="v">42</span><i style="height:65%"></i><span class="d">Fri</span></div>
+              <div class="b" title="Saturday — 19 deliveries"><span class="v">19</span><i style="height:29%"></i><span class="d">Sat</span></div>
+              <div class="b" title="Sunday — 8 deliveries"><span class="v">8</span><i style="height:12%"></i><span class="d">Sun</span></div>
+            </div>
+          </div>
+          <div class="chart-foot">
+            <p class="small muted" data-viz="empty"><b>0 this week</b> — create your first delivery to start the count.</p>
+            <p class="small muted" data-viz="filled" hidden><b>187 this week</b> — up 12% on the week before.</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="chart-head">
+            <h3>Orders by status · last 30 days</h3>
+            <span class="badge badge-muted viz-badge"><span class="dot"></span>No data yet</span>
+          </div>
+          <div class="viz-empty hbars" data-viz="empty">
+            <div class="hbar">
+              <span class="hl"><span class="dot" style="background:var(--success)"></span>Delivered</span>
+              <span class="track"></span>
+              <span class="n">0</span>
+            </div>
+            <div class="hbar">
+              <span class="hl"><span class="dot" style="background:var(--color-neutral-500)"></span>Scheduled</span>
+              <span class="track"></span>
+              <span class="n">0</span>
+            </div>
+            <div class="hbar">
+              <span class="hl"><span class="dot" style="background:var(--info)"></span>Created</span>
+              <span class="track"></span>
+              <span class="n">0</span>
+            </div>
+            <div class="hbar">
+              <span class="hl"><span class="dot" style="background:var(--warning)"></span>Out for delivery</span>
+              <span class="track"></span>
+              <span class="n">0</span>
+            </div>
+            <div class="hbar">
+              <span class="hl"><span class="dot" style="background:var(--danger)"></span>Failed</span>
+              <span class="track"></span>
+              <span class="n">0</span>
+            </div>
+          </div>
+          <div class="hbars" data-viz="filled" hidden>
+            <div class="hbar" title="Delivered — 692 orders">
+              <span class="hl"><span class="dot" style="background:var(--success)"></span>Delivered</span>
+              <span class="track"><i style="width:100%;background:var(--success)"></i></span>
+              <span class="n">692</span>
+            </div>
+            <div class="hbar" title="Scheduled — 214 orders">
+              <span class="hl"><span class="dot" style="background:var(--color-neutral-500)"></span>Scheduled</span>
+              <span class="track"><i style="width:31%;background:var(--color-neutral-500)"></i></span>
+              <span class="n">214</span>
+            </div>
+            <div class="hbar" title="Created — 41 orders">
+              <span class="hl"><span class="dot" style="background:var(--info)"></span>Created</span>
+              <span class="track"><i style="width:6%;background:var(--info)"></i></span>
+              <span class="n">41</span>
+            </div>
+            <div class="hbar" title="Out for delivery — 18 orders">
+              <span class="hl"><span class="dot" style="background:var(--warning)"></span>Out for delivery</span>
+              <span class="track"><i style="width:3%;background:var(--warning)"></i></span>
+              <span class="n">18</span>
+            </div>
+            <div class="hbar" title="Failed — 11 orders">
+              <span class="hl"><span class="dot" style="background:var(--danger)"></span>Failed</span>
+              <span class="track"><i style="width:2%;background:var(--danger)"></i></span>
+              <span class="n">11</span>
+            </div>
+          </div>
+          <div class="chart-foot">
+            <p class="small muted" data-viz="empty">Every order you create lands in one of these states.</p>
+            <p class="small muted" data-viz="filled" hidden><b>11 failed in 30 days</b> — 1.6% of completed runs.</p>
+          </div>
+        </div>
       </div>
 
       <div class="dash-grid">
-        <div class="card tablecard">
+        <div class="card tablecard" data-tour="today-table">
           <div class="tools">
             <h3 style="font-size:16px">Today’s deliveries</h3>
             <span class="badge badge-info"><span class="dot"></span>Sample data</span>
@@ -93,14 +198,25 @@
           </div>
           <div style="padding:14px 16px;border-top:1px solid var(--border)">
             <p class="small muted">This is what your board looks like with orders in it. <b>Create your first delivery</b> to replace the samples.</p>
+            <div class="phil-chips">
+              <button class="phil-chip" data-phil>✨ What happens after my licence clears?</button>
+              <button class="phil-chip" data-phil>✨ How do patients track deliveries?</button>
+              <button class="phil-chip" data-phil>✨ What does a delivery cost?</button>
+            </div>
           </div>
         </div>
 
-        <div class="card">
+        <div class="rail">
+        <button class="cl-pill" id="cl-pill" hidden><span class="dot"></span><span class="lbl">Setup · 0 of 5 ✓</span></button>
+
+        <div class="card" id="checklist-card" data-tour="checklist">
           <div class="cl-head">
             <div class="row between">
-              <h3>Get delivery-ready</h3>
-              <span class="small muted" id="cl-count">0 of 5 complete</span>
+              <h3 id="cl-title">Get delivery-ready</h3>
+              <span class="row" style="gap:10px">
+                <span class="small muted" id="cl-count">0 of 5 complete</span>
+                <button class="btn btn-link" id="cl-hide" aria-label="Hide checklist" style="font-size:12.5px;color:var(--muted-foreground)">Hide</button>
+              </span>
             </div>
             <div class="bar"><i id="cl-progress" style="width:0%"></i></div>
           </div>
@@ -137,6 +253,45 @@
             </div>
           </div>
         </div>
+
+        <div class="card" id="needs-card" hidden>
+          <div class="cl-head">
+            <h3 style="font-size:16px">Needs attention</h3>
+          </div>
+          <div class="tracker">
+            <div class="doc-row">
+              <span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></span>
+              <div class="t"><b>Overdue orders</b><span>Past their delivery window</span></div>
+              <span class="badge badge-good"><span class="dot"></span>0 · all clear</span>
+            </div>
+            <div class="doc-row">
+              <span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+              <div class="t"><b>Due today, no driver</b><span>Waiting to be dispatched</span></div>
+              <span class="badge badge-good"><span class="dot"></span>0 · all clear</span>
+            </div>
+            <div class="doc-row">
+              <span class="ic"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6M9 9l6 6"/></svg></span>
+              <div class="t"><b>Failed · last 7 days</b><span>Missed or refused at the door</span></div>
+              <span class="badge badge-good"><span class="dot"></span>0 · all clear</span>
+            </div>
+          </div>
+          <div style="padding:12px 18px;border-top:1px solid var(--border)">
+            <p class="small muted">When something needs you, it shows up here first.</p>
+          </div>
+        </div>
+
+        <div class="card announce" id="announce-card" data-announce-id="blister-2026-08" hidden>
+          <div class="announce-body">
+            <span class="badge badge-brand">NEW</span>
+            <b>Blister pack plans</b>
+            <p>Put recurring meds on autopilot — weekly and monthly cycles, orders created for you.</p>
+          </div>
+          <div class="announce-foot">
+            <button class="btn btn-outline btn-sm" data-announce-cta>See how it works</button>
+            <button class="btn btn-ghost btn-sm" data-announce-dismiss>Dismiss</button>
+          </div>
+        </div>
+        </div>
       </div>
 
       <p class="small muted mt-3"><a href="/index.html" data-reset>Reset prototype ↺</a></p>
@@ -144,5 +299,7 @@
   </div>
 </div>
 <script src="/js/flow.js"></script>
+<script src="/js/tour.pharmacy.js"></script>
+<script src="/js/tour.js"></script>
 </body>
 </html>
