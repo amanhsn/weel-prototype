@@ -648,6 +648,19 @@ const Weel = (() => {
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeOrderDrawer(); });
   }
 
+  /* ---------- shared init for the courier feature pages (Pharmacies, Orders, Delivery Reports,
+     Calendar, Drivers, Map View, Payments) — static sample data, chrome + decorative-control toasts only ---------- */
+  function initCourierFeature() {
+    const s = state();
+    $('#who') && ($('#who').textContent = (s.courier && s.courier.name) || 'Rapide Livraison Inc.');
+    fillChrome();
+    $('#new-dispatch')?.addEventListener('click', () => toast('Dispatch creation ships in the next prototype round'));
+    $$('[data-preview]').forEach(el => {
+      const fire = () => toast('Sample data — this control is a preview in this prototype');
+      el.addEventListener(el.tagName === 'INPUT' || el.tagName === 'SELECT' ? 'focus' : 'click', fire, { once: true });
+    });
+  }
+
   /* ---------- verification tracker ---------- */
   function initVerification() {
     const rows = {
@@ -875,6 +888,8 @@ const Weel = (() => {
       phdash: initPharmacyDashboard, phverify: initVerification, phdeliv: initPharmacyDeliveries,
       co1: initCourierStep1, fleet: initFleet, compliance: initCompliance, activation: initActivation,
       codash: initCourierDashboard,
+      copharmacies: initCourierFeature, coorders: initCourierFeature, coreports: initCourierFeature,
+      cocalendar: initCourierFeature, codrivers: initCourierFeature, comap: initCourierFeature, copayments: initCourierFeature,
       join: initJoin, coldstart: initColdStart
     };
     if (init && map[init]) map[init]();

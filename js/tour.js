@@ -1,7 +1,14 @@
 /* tour.js — Weel education layer: welcome modal, spotlight tour, help menu.
    Dependency-free. Requires flow.js (Weel) plus a per-role config file that sets
    window.WEEL_TOUR = { role, org(state), welcome:{…}, steps:[{target, placement, title:{en,fr}, body:{en,fr}}] }
-   Script order on a page: flow.js → tour.<role>.js → tour.js */
+
+   Optional per-feature fields (added for feature-level spotlight tours, see docs/figma-handoff/H-feature-spotlight-tours.md):
+     feature:     'drivers'                 — namespaces persistence: weel-tour-<role>-<feature>. Omit for the dashboard tour.
+     auto:        true                      — auto-fires on first visit, gated by the once-per-session throttle below.
+     featureName: { en: 'Drivers', fr: … }  — used by the Help-menu "Show me around: {feature}" label.
+     doneToast:   { en: '…', fr: … }        — optional; feature tours don't reuse the dashboard's checklist-handoff toast.
+
+   Script order on a page: flow.js → tour.<role>[.<feature>].js → tour.js */
 
 const WeelTour = (() => {
   const cfg = window.WEEL_TOUR;
@@ -22,6 +29,7 @@ const WeelTour = (() => {
       helpResume: (n, t) => `Resume tour · step ${n} of ${t}`,
       helpGuide: 'Getting started guide',
       helpPhil: '✨ Ask Phil',
+      helpShow: (name) => `Show me around: ${name}`,
       philPreview: 'Phil is a preview in this prototype',
       doneToast: 'You’re set — the checklist takes it from here'
     },
@@ -32,14 +40,16 @@ const WeelTour = (() => {
       helpResume: (n, t) => `Reprendre la visite · étape ${n} sur ${t}`,
       helpGuide: 'Guide de démarrage',
       helpPhil: '✨ Demander à Phil',
+      helpShow: (name) => `Faites-moi visiter : ${name}`,
       philPreview: 'Phil est un aperçu dans ce prototype',
       doneToast: 'Vous êtes prêt — la liste s’occupe du reste'
     }
   };
   const C = () => CHROME[lang()] || CHROME.en;
 
-  const tourKey = 'weel-tour-' + cfg.role;
+  const tourKey = 'weel-tour-' + cfg.role + (cfg.feature ? '-' + cfg.feature : '');
   const welcomeKey = 'weel-welcome-' + cfg.role;
+  const FEATURE_SESSION_KEY = 'weel-feature-tour-shown-this-session';
 
   /* ---------- welcome modal ---------- */
   function showWelcome(force) {
@@ -240,11 +250,23 @@ const WeelTour = (() => {
     removeEventListener('resize', onMove);
     document.removeEventListener('scroll', onMove, true);
     if (dom) { dom.scrim.remove(); dom.hl.remove(); dom.card.remove(); dom = null; }
-    if (status === 'done' && weel()) weel().toast(C().doneToast);
+    if (status === 'done' && weel()) {
+      const msg = cfg.feature ? (cfg.doneToast ? T(cfg.doneToast) : null) : C().doneToast;
+      if (msg) weel().toast(msg);
+    }
   }
 
   function replay() {
     localStorage.removeItem(tourKey);
+    start(0);
+  }
+
+  /* ---------- feature-tour auto-fire (one per browser tab session) ---------- */
+  function autoStartFeatureTour() {
+    if (!cfg.auto || !cfg.feature) return;                            // dashboard tour never matches — no feature/auto set
+    if (localStorage.getItem(tourKey) !== null) return;                // already done/skipped/mid-way from a prior visit
+    if (sessionStorage.getItem(FEATURE_SESSION_KEY) !== null) return;  // another feature tour already fired this session
+    sessionStorage.setItem(FEATURE_SESSION_KEY, cfg.feature);
     start(0);
   }
 
@@ -258,10 +280,14 @@ const WeelTour = (() => {
       if (pop) return close();
       const v = localStorage.getItem(tourKey);
       const resumable = v !== null && /^\d+$/.test(v);
+      const neverStarted = v === null;
+      const tourLabel = resumable
+        ? C().helpResume(+v + 1, cfg.steps.length)
+        : (neverStarted && cfg.feature ? C().helpShow(T(cfg.featureName)) : C().helpReplay);
       pop = document.createElement('div');
       pop.className = 'help-pop';
       pop.innerHTML = `
-        <button data-h="tour">${resumable ? C().helpResume(+v + 1, cfg.steps.length) : C().helpReplay}</button>
+        <button data-h="tour">${tourLabel}</button>
         <button data-h="guide">${C().helpGuide}</button>
         <button data-h="phil">${C().helpPhil}</button>`;
       document.body.appendChild(pop);
@@ -289,6 +315,7 @@ const WeelTour = (() => {
     document.querySelectorAll('[data-phil]').forEach(b =>
       b.addEventListener('click', () => weel() && weel().toast(C().philPreview)));
     showWelcome(false);
+    autoStartFeatureTour();
   });
 
   return { start, replay };
